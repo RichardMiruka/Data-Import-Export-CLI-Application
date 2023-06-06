@@ -4,7 +4,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-# Add this line to import the Base from the app.database module
+# To import the Base from the app.database module
 from app.database import Base
 
 # Add the path to your project's root directory
