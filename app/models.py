@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String
-from app.database import Base
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 # Defining the Data model that inherits from BaseData
 class Data(Base):
