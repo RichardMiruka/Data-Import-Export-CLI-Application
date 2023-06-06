@@ -1,6 +1,8 @@
 import click
 import csv
+from sqlalchemy.orm import sessionmaker
 from .database import Session, Data
+from .utils import merge_sort
 
 @click.group()
 def cli():
@@ -9,10 +11,15 @@ def cli():
 
 @cli.command()
 @click.argument('file_path')
-def import_data(file_path):
-    """Import data from a CSV file into the database"""
+@click.option('--sort', '-s', is_flag=True, help='Sort the data before importing')
+def import_data(file_path, sort):
+    """
+    Import data from a CSV file into the database
     
-    # Reading the CSV file and extracting data
+    Args:
+        file_path (str): Path to the CSV file
+        sort (bool): Flag to enable sorting of data before importing
+    """
     data = []
 
     with open(file_path, 'r') as csv_file:
@@ -20,51 +27,52 @@ def import_data(file_path):
         for row in csv_reader:
             data.append(row)
 
-    # Creating a session
+    if sort:
+        column1_values = [row['column1'] for row in data]
+        sorted_column1 = merge_sort(column1_values)
+        for i, row in enumerate(data):
+            row['column1'] = sorted_column1[i]
+
     session = Session()
 
     try:
-        # Iterate over the data and insert into the database
         for row in data:
             entry = Data(column1=row['column1'], column2=row['column2'], column3=row['column3'])
             session.add(entry)
 
-        # Commit the changes
         session.commit()
 
         click.echo("Data import successful!")
 
     except Exception as e:
-        # Rollback the transaction in case of an error
         session.rollback()
-
         click.echo(f"Data import failed: {str(e)}", err=True)
 
     finally:
-        # Close the session
         session.close()
 
 @cli.command()
 @click.argument('file_path')
 def export_data(file_path):
-    """Export data from the database to a CSV file"""
-    # Create a session
+    """
+    Export data from the database to a CSV file
+    
+    Args:
+        file_path (str): Path to the CSV file for exporting the data
+    """
     session = Session()
 
     try:
-        # Retrieving data from the database
         data = session.query(Data).all()
 
-        # Converting data to a format suitable for CSV export
         csv_data = []
         for entry in data:
             row = [entry.column1, entry.column2, entry.column3]
             csv_data.append(row)
 
-        # Write the data to a CSV file
         with open(file_path, 'w', newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
-            csv_writer.writerow(['column1', 'column2', 'column3'])  # Write the header row
+            csv_writer.writerow(['column1', 'column2', 'column3'])
             csv_writer.writerows(csv_data)
 
         click.echo("Data export successful!")
@@ -73,9 +81,7 @@ def export_data(file_path):
         click.echo(f"Data export failed: {str(e)}", err=True)
 
     finally:
-        # Close the session
         session.close()
-
 
 if __name__ == '__main__':
     cli()
