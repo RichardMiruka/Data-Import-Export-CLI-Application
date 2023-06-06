@@ -11,7 +11,8 @@ def cli():
 @click.argument('file_path')
 def import_data(file_path):
     """Import data from a CSV file into the database"""
-    # How to Read the CSV file and extract data
+    
+    # Reading the CSV file and extracting data
     data = []
 
     with open(file_path, 'r') as csv_file:
@@ -19,7 +20,7 @@ def import_data(file_path):
         for row in csv_reader:
             data.append(row)
 
-    # Create a session
+    # Creating a session
     session = Session()
 
     try:
@@ -51,10 +52,10 @@ def export_data(file_path):
     session = Session()
 
     try:
-        # Retrieve data from the database
+        # Retrieving data from the database
         data = session.query(Data).all()
 
-        # Convert data to a format suitable for CSV export
+        # Converting data to a format suitable for CSV export
         csv_data = []
         for entry in data:
             row = [entry.column1, entry.column2, entry.column3]
@@ -75,7 +76,6 @@ def export_data(file_path):
         # Close the session
         session.close()
 
-# Add more commands and functions as needed
 
 if __name__ == '__main__':
     cli()
