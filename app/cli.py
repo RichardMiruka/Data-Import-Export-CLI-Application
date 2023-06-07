@@ -42,3 +42,37 @@ class Importer:
         finally:
             session.close()
 
+class Exporter:
+    def __init__(self, file_path):
+        self.file_path = file_path
+
+    def run(self):
+        session = Session()
+
+        try:
+            data = session.query(Data).all()
+
+            csv_data = []
+            for entry in data:
+                row = [entry.column1, entry.column2, entry.column3]
+                csv_data.append(row)
+
+            with open(self.file_path, 'w', newline='') as csv_file:
+                csv_writer = csv.writer(csv_file)
+                csv_writer.writerow(['column1', 'column2', 'column3'])
+                csv_writer.writerows(csv_data)
+
+            click.echo("Data export successful!")
+
+        except Exception as e:
+            click.echo(f"Data export failed: {str(e)}", err=True)
+
+        finally:
+            session.close()
+
+
+@click.group()
+def cli():
+    """Data Import/Export CLI Application"""
+    pass
+
