@@ -1,7 +1,7 @@
 import click
 import csv
 from sqlalchemy.orm import sessionmaker
-from .database import Session
+from app.database import Session
 from .models import Data
 from .utils import merge_sort
 
