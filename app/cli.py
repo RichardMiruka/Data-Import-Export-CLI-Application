@@ -2,7 +2,7 @@ import click
 import csv
 from sqlalchemy.orm import sessionmaker
 from app.database import Session
-from .models import Data
+from app.models import Data, Table1, Table2
 from .utils import merge_sort
 
 class Importer:
