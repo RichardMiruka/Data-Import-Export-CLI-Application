@@ -1,5 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from .models import Data
+
 
 # Defining the database connection URL
 db_url = 'sqlite:///data.db'

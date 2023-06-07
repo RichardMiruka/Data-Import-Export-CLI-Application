@@ -2,7 +2,7 @@ import click
 import csv
 from sqlalchemy.orm import sessionmaker
 from app.database import Session, Data
-from .models import Base, DataModel
+from .models import Base
 from .utils import merge_sort
 
 @click.group()
