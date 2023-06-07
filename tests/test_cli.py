@@ -1,5 +1,5 @@
 from click.testing import CliRunner
-from app.cli import import_data, export_data
+from app.cli import cli
 
 def test_data_import_export():
     runner = CliRunner()
@@ -8,7 +8,7 @@ def test_data_import_export():
     import_file_path = 'test_import.csv'
     
     # Simulate the import command-line invocation
-    import_result = runner.invoke(import_data, [import_file_path])
+    import_result = runner.invoke(cli, ['import_data', import_file_path])
     
     # Assert the expected output or behavior for import
     assert import_result.exit_code == 0
@@ -18,7 +18,7 @@ def test_data_import_export():
     export_file_path = 'test_export.csv'
     
     # Simulate the export command-line invocation
-    export_result = runner.invoke(export_data, [export_file_path])
+    export_result = runner.invoke(cli, ['export_data', export_file_path])
     
     # Assert the expected output or behavior for export
     assert export_result.exit_code == 0
@@ -30,3 +30,4 @@ def test_data_import_export():
 
 if __name__ == '__main__':
     test_data_import_export()
+
