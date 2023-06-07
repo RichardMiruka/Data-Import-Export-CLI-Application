@@ -1,12 +1,8 @@
 import click
 import csv
-from sqlalchemy.orm import sessionmaker
-from app.database import session, Data
+from app.database import Session, Data
 from app.models import Base
 from app.utils import merge_sort
-import sys
-
-sys.path.append('.')
 
 @click.group()
 def cli():
@@ -37,6 +33,8 @@ def import_data(file_path, sort):
         for i, row in enumerate(data):
             row['column1'] = sorted_column1[i]
 
+    session = Session()
+
     try:
         for row in data:
             entry = Data(column1=row['column1'], column2=row['column2'], column3=row['column3'])
@@ -50,6 +48,9 @@ def import_data(file_path, sort):
         session.rollback()
         click.echo(f"Data import failed: {str(e)}", err=True)
 
+    finally:
+        session.close()
+
 @cli.command()
 @click.argument('file_path')
 def export_data(file_path):
@@ -59,6 +60,8 @@ def export_data(file_path):
     Args:
         file_path (str): Path to the CSV file for exporting the data
     """
+    session = Session()
+
     try:
         data = session.query(Data).all()
 
@@ -76,5 +79,8 @@ def export_data(file_path):
 
     except Exception as e:
         click.echo(f"Data export failed: {str(e)}", err=True)
+
+    finally:
+        session.close()
 
 
