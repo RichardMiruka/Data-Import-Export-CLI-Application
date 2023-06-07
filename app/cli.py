@@ -34,6 +34,7 @@ def import_data(file_path, sort):
         for i, row in enumerate(data):
             row['column1'] = sorted_column1[i]
 
+
     session = Session()
 
     try:
