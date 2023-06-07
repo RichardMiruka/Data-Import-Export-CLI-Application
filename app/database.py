@@ -1,15 +1,12 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from .models import Data
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, scoped_session
 
+engine = create_engine('sqlite:///data.db')
+Base = declarative_base()
+session_factory = sessionmaker(bind=engine)
+Session = scoped_session(session_factory)
+Base.query = Session.query_property()
 
-# Defining the database connection URL
-db_url = 'sqlite:///data.db'
-
-# Create the database engine
-engine = create_engine(db_url)
-
-# Create a session factory
-Session = sessionmaker(bind=engine)
 
     
