@@ -76,3 +76,35 @@ def cli():
     """Data Import/Export CLI Application"""
     pass
 
+@click.group()
+def cli():
+    """Data Import/Export CLI Application"""
+    pass
+
+
+@cli.command()
+@click.argument('file_path')
+@click.option('--sort', '-s', is_flag=True, help='Sort the data before importing')
+def import_data(file_path, sort):
+    """
+    Import data from a CSV file into the database
+
+    Args:
+        file_path (str): Path to the CSV file
+        sort (bool): Flag to enable sorting of data before importing
+    """
+    importer = Importer(file_path, sort)
+    importer.run()
+
+
+@cli.command()
+@click.argument('file_path')
+def export_data(file_path):
+    """
+    Export data from the database to a CSV file
+
+    Args:
+        file_path (str): Path to the CSV file for exporting the data
+    """
+    exporter = Exporter(file_path)
+    exporter.run()
