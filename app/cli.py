@@ -1,8 +1,9 @@
 import click
 import csv
-from app.database import Session, Data
-from app.models import Base
-from app.utils import merge_sort
+from sqlalchemy.orm import sessionmaker
+from .database import Session
+from .models import Data
+from .utils import merge_sort
 
 @click.group()
 def cli():
@@ -82,5 +83,6 @@ def export_data(file_path):
 
     finally:
         session.close()
+
 
 
